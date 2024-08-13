@@ -1,0 +1,25 @@
+services:
+  front:
+    image: "frontend-test"
+    ports: 
+      - "3000:3000"
+    env_file:
+      - front-variables.env
+  back:
+    image: "pedropizarrom/interny:be0.1"
+    command: >
+      sh -c "python interny/manage.py makemigrations authenticate &&
+             python interny/manage.py makemigrations dashboard &&
+             python interny/manage.py migrate &&
+             python interny/manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    env_file:
+      - back-variables.env
+  db:
+      image: postgres:14
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
